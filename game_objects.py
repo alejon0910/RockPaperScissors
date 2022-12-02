@@ -250,4 +250,4 @@ class Game:
     def report_winner(self):
         """ Returns a message with the overall winner """
         self.find_winner()
-        return f"{self.round_winner.name} is the winner, also {self.players}"
+        return f"{self.round_winner.name} is the winner"
