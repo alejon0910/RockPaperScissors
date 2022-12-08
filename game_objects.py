@@ -11,7 +11,6 @@ Classes
 
 """
 import random
-#changes
 
 # constants
 RPSLS_OBJECTS = ('rock', 'paper', 'scissors', 'lizard', 'spock')

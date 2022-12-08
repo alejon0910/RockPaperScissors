@@ -7,7 +7,6 @@ import pytest
 def my_rock():
     return PlayerObject("rock")
 
-#changes
 @pytest.fixture
 def my_spock():
     return PlayerObject("spock")

@@ -1,6 +1,7 @@
 from game_objects import Game, PlayerObject, ComputerPlayer
 
 
+# Set up class
 class CLInterface:
 
     def __init__(self):
