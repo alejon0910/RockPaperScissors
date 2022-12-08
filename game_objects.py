@@ -63,7 +63,7 @@ class PlayerObject:
                 name of object - must be in allowable objects
         """
 
-        self.name = name.lower()
+        name = name.lower()
 
         if name not in self.allowable_objects:
             raise ValueError(f"{name} is not an allowable object")
