@@ -191,8 +191,9 @@ class Game:
     """
 
     def __init__(self, allowable_objects=None, win_dict=None):
+        self.reported_winner = None
         if allowable_objects is None:
-            allowable_objects = RPSLS_OBJECTS
+            self.allowable_objects = RPSLS_OBJECTS
         if win_dict is None:
             win_dict = RPSLS_WIN_DICT
         self.players = []
@@ -217,12 +218,16 @@ class Game:
         """ Finds the winner of the current round """
         if self.players[0].current_object > self.players[1].current_object:
             self.round_winner = self.players[0]
+            self.reported_winner = self.players[0].name
             self.players[0].score += 1
             self.round_result = "lose"
         elif self.players[0].current_object < self.players[1].current_object:
             self.round_winner = self.players[1]
+            self.reported_winner = self.players[1].name
             self.round_result = "win"
             self.players[1].score += 1
+        else:
+            self.reported_winner = "No one"
 
     def next_round(self):
         """ Resets game objects ready for a new round """
@@ -242,7 +247,7 @@ class Game:
 
     def report_round(self):
         """ returns a message reporting on what the players played and what the result of the round was """
-        return f"{self.players[0].name} choose '{self.players[0].current_object.name}'.\n{self.players[1].name} choose '{self.players[1].current_object.name}'.\n{self.round_winner.name} won this round"
+        return f"{self.players[0].name} choose '{self.players[0].current_object.name}'.\n{self.players[1].name} choose '{self.players[1].current_object.name}'.\n{self.reported_winner} won this round"
 
     def report_score(self):
         """ Returns a string with the current scores """
