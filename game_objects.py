@@ -219,13 +219,14 @@ class Game:
             self.round_winner = self.players[0]
             self.reported_winner = self.players[0].name
             self.players[0].score += 1
-            self.round_result = "lose"
+            self.round_result = "win"
         elif self.players[0].current_object < self.players[1].current_object:
             self.round_winner = self.players[1]
             self.reported_winner = self.players[1].name
-            self.round_result = "win"
+            self.round_result = "lose"
             self.players[1].score += 1
         else:
+            self.round_result = "tie"
             self.reported_winner = "No one"
 
     def next_round(self):
@@ -243,10 +244,15 @@ class Game:
     def reset(self):
         """ Resets the whole game, setting current round to 0 and player scores to 0"""
         self.current_round = 0
+        self.players[0].score = 0
+        self.players[1].score = 0
 
     def report_round(self):
         """ returns a message reporting on what the players played and what the result of the round was """
-        return f"{self.players[0].name} choose '{self.players[0].current_object.name}'.\n{self.players[1].name} choose '{self.players[1].current_object.name}'.\n{self.reported_winner} won this round"
+        if self.current_round < self.max_rounds:
+            return f"{self.players[0].name} chose '{self.players[0].current_object.name}'.\n{self.players[1].name} chose '{self.players[1].current_object.name}'.\n{self.reported_winner} won this round"
+        else:
+            return f"{self.players[0].name} chose '{self.players[0].current_object.name}'.\n{self.players[1].name} chose '{self.players[1].current_object.name}'.\n{self.reported_winner} won this round\n\n{self.report_winner()}"
 
     def report_score(self):
         """ Returns a string with the current scores """
@@ -254,5 +260,9 @@ class Game:
 
     def report_winner(self):
         """ Returns a message with the overall winner """
-        self.find_winner()
-        return f"{self.round_winner.name} is the winner"
+        if self.players[0].score > self.players[1].score:
+            return f"WINNER: {self.players[0].name}"
+        elif self.players[1].score > self.players[0].score:
+            return f"WINNER: {self.players[1].name}"
+        else:
+            return f"WINNER: NO ONE"
