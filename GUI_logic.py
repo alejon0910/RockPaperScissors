@@ -11,8 +11,6 @@ class GUI_Interface:
         self.game = Game()
         self.game.add_human_player()
         self.game.add_computer_player()
-        self.player0 = self.game.players[0]
-        self.player1 = self.game.players[1]
         self.clicked = None
 
     def set_max_rounds(self, rounds):
@@ -21,27 +19,27 @@ class GUI_Interface:
     def run_game(self, choice):
 
         if self.game.current_round < self.game.max_rounds:
-            self.player0.choose_object(choice)
-            self.player1.choose_object()
+            self.game.players[0].choose_object(choice)
+            self.game.players[1].choose_object()
 
             self.game.find_winner()
 
             if self.game.round_result == "win":
-                playsound(r"C:\Users\bigal\Documents\OneDrive_2022-12-01\Rock Paper Scissors\sounds\win.wav")
+                playsound(r"sounds\win.wav")
             elif self.game.round_result == "lose":
-                playsound(r"C:\Users\bigal\Documents\OneDrive_2022-12-01\Rock Paper Scissors\sounds\lose.wav")
+                playsound(r"sounds\lose.wav")
             else:
-                playsound(r"C:\Users\bigal\Documents\OneDrive_2022-12-01\Rock Paper Scissors\sounds\tie.wav")
+                playsound(r"sounds\tie.wav")
 
             print(f"\n{self.game.report_round()}")
-            print(f"\n{self.player0.name} {self.player0.score} - {self.player1.score} {self.player1.name}")
+            print(f"\n{self.game.players[0].name} {self.game.players[0].score} - {self.game.players[1].score} {self.game.players[1].name}")
             self.game.current_round += 1
 
     def display_winner(self):
 
-        if self.player0.score > self.player1.score:
-            return f"WINNER: {self.player0.name}"
-        elif self.player1.score > self.player0.score:
-            return f"WINNER: {self.player1.name}"
+        if self.game.players[0].score > self.game.players[1].score:
+            return f"WINNER: {self.game.players[0].name}"
+        elif self.game.players[1].score > self.game.players[0].score:
+            return f"WINNER: {self.game.players[1].name}"
         else:
             return f"WINNER: NO ONE"

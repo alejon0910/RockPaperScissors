@@ -1,7 +1,6 @@
 import tkinter as tk
 from game_objects import Game, PlayerObject
 from GUI_logic import GUI_Interface
-from playsound import playsound
 
 
 class GameApp(tk.Tk):
@@ -58,7 +57,6 @@ class GameApp(tk.Tk):
         frame_to_show = self.frames[current_frame]
 
         frame_to_show.pack(expand=True, fill=tk.BOTH)
-        frame_to_show.set_up()
 
 
 class MenuGUI(tk.Frame):
@@ -66,18 +64,18 @@ class MenuGUI(tk.Frame):
         super().__init__()
         self.input_name = None
         self.controller = controller
-        self.round_number = tk.StringVar()
         self.config(background="white")
         # This spreads out two columns in the available space with equal weight given to both columns
         self.columnconfigure(0, weight=1)
         self.columnconfigure(1, weight=1)
 
         self.num_rounds_label = tk.Label(self, text="Number of Rounds", bg="white", font="Metropolis")
-        self.num_rounds_value = tk.Entry(self,width=34)
+        self.num_rounds_value = tk.Entry(self, width=34)
         self.name_label = tk.Label(self, text="Name", bg="white", font="Metropolis")
-        self.name_value = tk.Entry(self,width=34)
+        self.name_value = tk.Entry(self, width=34)
 
-        self.next_frame_button = tk.Button(self, text="Start", font="Metropolis", command=self.next_frame, bg="#77afbf", fg="white", width=10)
+        self.next_frame_button = tk.Button(self, text="Start", font="Metropolis", command=self.next_frame, bg="#77afbf",
+                                           fg="white", width=10)
 
         # This displays elements in grid layout
         self.name_label.grid(row=1, column=0, padx=55, pady=0, sticky="w")
@@ -86,13 +84,8 @@ class MenuGUI(tk.Frame):
         self.num_rounds_value.grid(row=2, column=1, padx=10, pady=10, sticky="w")
         self.next_frame_button.grid(row=3, column=0, columnspan=3, padx=60, pady=0, sticky="w")
 
-    def set_up(self):
-        # Add code to set up variables for this frame. Note this refers to the game object stored on
-        # the main app (the controller)
-        self.round_number.set(self.controller.game.current_round)
-
     def next_frame(self):
-        self.controller.frames["game_GUI"].logic.player0.name = self.name_value.get()
+        self.controller.frames["game_GUI"].logic.game.players[0].name = self.name_value.get()
         self.controller.frames["game_GUI"].logic.set_max_rounds(int(self.num_rounds_value.get()))
         self.controller.show_frame("game_GUI")
 
@@ -109,26 +102,27 @@ class GameGUI(tk.Frame):
 
         self.logic = GUI_Interface()
 
-        self.rock_photo = tk.PhotoImage(
-            file=r"C:\Users\bigal\Documents\OneDrive_2022-12-01\Rock Paper Scissors\images\rock.png")
-        self.paper_photo = tk.PhotoImage(
-            file=r"C:\Users\bigal\Documents\OneDrive_2022-12-01\Rock Paper Scissors\images\paper.png")
-        self.scissors_photo = tk.PhotoImage(
-            file=r"C:\Users\bigal\Documents\OneDrive_2022-12-01\Rock Paper Scissors\images\scissors.png")
-        self.lizard_photo = tk.PhotoImage(
-            file=r"C:\Users\bigal\Documents\OneDrive_2022-12-01\Rock Paper Scissors\images\lizard.png")
-        self.spock_photo = tk.PhotoImage(
-            file=r"C:\Users\bigal\Documents\OneDrive_2022-12-01\Rock Paper Scissors\images\spock.png")
-        self.greyrock_photo = tk.PhotoImage(
-            file=r"C:\Users\bigal\Documents\OneDrive_2022-12-01\Rock Paper Scissors\images\rockGrey.png")
-        self.greypaper_photo = tk.PhotoImage(
-            file=r"C:\Users\bigal\Documents\OneDrive_2022-12-01\Rock Paper Scissors\images\paperGrey.png")
-        self.greyscissors_photo = tk.PhotoImage(
-            file=r"C:\Users\bigal\Documents\OneDrive_2022-12-01\Rock Paper Scissors\images\scissorsGrey.png")
-        self.greylizard_photo = tk.PhotoImage(
-            file=r"C:\Users\bigal\Documents\OneDrive_2022-12-01\Rock Paper Scissors\images\lizardGrey.png")
-        self.greyspock_photo = tk.PhotoImage(
-            file=r"C:\Users\bigal\Documents\OneDrive_2022-12-01\Rock Paper Scissors\images\spockGrey.png")
+        self.user_option_photos = (tk.PhotoImage(
+                                       file=r"C:\Users\bigal\Documents\OneDrive_2022-12-01\Rock Paper Scissors\images\rock.png"),
+                                   tk.PhotoImage(
+                                       file=r"C:\Users\bigal\Documents\OneDrive_2022-12-01\Rock Paper Scissors\images\paper.png"),
+                                   tk.PhotoImage(
+                                       file=r"C:\Users\bigal\Documents\OneDrive_2022-12-01\Rock Paper Scissors\images\scissors.png"),
+                                   tk.PhotoImage(
+                                       file=r"C:\Users\bigal\Documents\OneDrive_2022-12-01\Rock Paper Scissors\images\lizard.png"),
+                                   tk.PhotoImage(
+                                       file=r"C:\Users\bigal\Documents\OneDrive_2022-12-01\Rock Paper Scissors\images\spock.png"))
+
+        self.cpu_option_photos = (tk.PhotoImage(
+                                      file=r"C:\Users\bigal\Documents\OneDrive_2022-12-01\Rock Paper Scissors\images\rockGrey.png"),
+                                  tk.PhotoImage(
+                                      file=r"C:\Users\bigal\Documents\OneDrive_2022-12-01\Rock Paper Scissors\images\paperGrey.png"),
+                                  tk.PhotoImage(
+                                      file=r"C:\Users\bigal\Documents\OneDrive_2022-12-01\Rock Paper Scissors\images\scissorsGrey.png"),
+                                  tk.PhotoImage(
+                                      file=r"C:\Users\bigal\Documents\OneDrive_2022-12-01\Rock Paper Scissors\images\lizardGrey.png"),
+                                  tk.PhotoImage(
+                                      file=r"C:\Users\bigal\Documents\OneDrive_2022-12-01\Rock Paper Scissors\images\spockGrey.png"))
 
         self.next_frame_button = tk.Button(self, text="Quit",
                                            command=self.next_frame, font="Metropolis")
@@ -138,51 +132,52 @@ class GameGUI(tk.Frame):
         # Functions that each button press will perform
         def display_score():
             self.report_label.config(
-                text=self.logic.game.report_round() + f"\n\n{self.logic.player0.score} - {self.logic.player1.score}")
+                text=self.logic.game.report_round() + f"\n\n{self.logic.game.players[0].score} - {self.logic.game.players[1].score}")
 
         def change_round():
             self.round_label.config(
                 text=f"Round {self.logic.game.current_round}")
 
-        self.user_option_buttons = (tk.Button(self, image=self.rock_photo, borderwidth=0, highlightthickness=0,
+        self.user_option_buttons = (tk.Button(self, image=self.user_option_photos[0], borderwidth=0, highlightthickness=0,
                                               command=lambda: [(self.logic.run_game("Rock")),
                                                                display_score(),
-                                                               change_round()]),
-                                    tk.Button(self, image=self.paper_photo, borderwidth=0, highlightthickness=0,
+                                                               change_round(),
+                                                               ]),
+                                    tk.Button(self, image=self.user_option_photos[1], borderwidth=0, highlightthickness=0,
                                               command=lambda: [(self.logic.run_game("Paper")),
                                                                display_score(),
-                                                               change_round()]),
-                                    tk.Button(self, image=self.scissors_photo, borderwidth=0, highlightthickness=0,
+                                                               change_round(),
+                                                               ]),
+                                    tk.Button(self, image=self.user_option_photos[2], borderwidth=0, highlightthickness=0,
                                               command=lambda: [(self.logic.run_game("Scissors")),
                                                                display_score(),
-                                                               change_round()]),
-                                    tk.Button(self, image=self.lizard_photo, borderwidth=0, highlightthickness=0,
+                                                               change_round(),
+                                                               ]),
+                                    tk.Button(self, image=self.user_option_photos[3], borderwidth=0, highlightthickness=0,
                                               command=lambda: [(self.logic.run_game("Lizard")),
                                                                display_score(),
-                                                               change_round()]),
-                                    tk.Button(self, image=self.spock_photo, borderwidth=0, highlightthickness=0,
+                                                               change_round(),
+                                                               ]),
+                                    tk.Button(self, image=self.user_option_photos[4], borderwidth=0, highlightthickness=0,
                                               command=lambda: [(self.logic.run_game("Spock")),
                                                                display_score(),
-                                                               change_round()]))
+                                                               change_round(),
+                                                               ]))
 
-        self.cpu_option_buttons = (tk.Label(self, image=self.greyrock_photo, borderwidth=0, highlightthickness=0),
-                                   tk.Label(self, image=self.greypaper_photo, borderwidth=0, highlightthickness=0),
-                                   tk.Label(self, image=self.greyscissors_photo, borderwidth=0, highlightthickness=0),
-                                   tk.Label(self, image=self.greylizard_photo, borderwidth=0, highlightthickness=0),
-                                   tk.Label(self, image=self.greyspock_photo, borderwidth=0, highlightthickness=0),
+        self.cpu_option_buttons = (tk.Label(self, image=self.cpu_option_photos[0], borderwidth=0, highlightthickness=0),
+                                   tk.Label(self, image=self.cpu_option_photos[1], borderwidth=0, highlightthickness=0),
+                                   tk.Label(self, image=self.cpu_option_photos[2], borderwidth=0, highlightthickness=0),
+                                   tk.Label(self, image=self.cpu_option_photos[3], borderwidth=0, highlightthickness=0),
+                                   tk.Label(self, image=self.cpu_option_photos[4], borderwidth=0, highlightthickness=0),
                                    )
 
         for i, btn in enumerate(self.user_option_buttons):
-            btn.grid(row=i + 1, column=0, padx=10, pady=10)
+            btn.place(x=70, y=20 + (i * 70))
         for i, btn in enumerate(self.cpu_option_buttons):
-            btn.grid(row=i + 1, column=2, padx=10, pady=10)
-        self.next_frame_button.grid(row=5, column=1, padx=10, pady=10)
-        self.round_label.grid(row=2, column=1)
-        self.report_label.grid(row=3, column=1)
-
-    def set_up(self):
-        # Add code to set up variables for this frame
-        ...
+            btn.place(x=480, y=20 + (i * 70))
+        self.next_frame_button.place(x=300, y=300, anchor="n")
+        self.round_label.place(x=300, y=100, anchor="n")
+        self.report_label.place(x=300, y=140, anchor="n")
 
     def option_button(self, option):
         print(f'You choose {option}')
